@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blue Forest</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <script>
+    $(document).ready(function () {
+      $("#dosignup").click(function () {
+        let obj = {
+          url: "/signup-process",
+          data: {
+            emailKuch: $("#txtEmail").val(),
+            pwdKuch: $("#txtPwd").val(),
+            utypeKuch: $("#utype").val()
+          }
+        }
+        $.ajax(obj).then(function (respStr) {
+          alert(respStr)
+        }).fail(function (err) {
+          alert(err.message);
+        })
+      })
+    })
+    $(document).ready(function () {
+      $("#dologin").click(function () {
+        let obj = {
+          url: "/login-process",
+          data: {
+            emailKuch2: $("#txtEmail2").val(),
+            pwdKuch2: $("#txtPwd2").val()
+          }
+        }
+        $.ajax(obj).then(function (respStr) {
+          alert(respStr)
+          if (respStr == 'Donor')
+            location.href = "/donor-dashboard"
+          else if (respStr == 'Needy')
+            location.href = "/needy-dashboard"
+          else
+            location.href = "/ngo-dashboard"
+          localStorage.setItem("activeuser", $("#txtEmail2").val());
+        }).fail(function (err) {
+          alert(err.message);
+        })
+      })
+    })
+    $(document).ready(function () {
+      $("#txtEmail").keyup(function () {
+        let email = $(this).val();
+        let regex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+        let res = regex.test(email)
+        if (res == false) {
+          $("#errEmail").html("INVALID").css("color", "red");
+          $("#msgSpan").html("");
+          return;
+        }
+        else {
+          $("#errEmail").html("VALID").css("color", "green");
+          $("#msgSpan").html("");
+        }
+
+        $.ajax({
+
+          url: "/check-email-ajax",
+          data: {
+            emailKuch3: $("#txtEmail").val(),
+            //pwdkuch:$("#txtpwd").val()
+          }
+
+        }).then(function (respStr) {
+          // alert(respStr)
+          $("#msgSpan").html(respStr);
+        }).fail(function (err) {
+          alert(err);
+        })
+      })
+    })
+    $(document).ready(function () {
+      $("#txtPwd").blur(function () {
+        let pwd = $(this).val();
+        let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{12,}$/;
+        let res = regex.test(pwd);
+        if (res == false) {
+          $("#errPwd").html("INVALID").css("color", "red");
+        }
+        else
+          $("#errPwd").html("VALID").css("color", "green");
+
+      })
+    })
+    $(document).ready(function () {
+      $("#showhidepwd").click(function () {
+        if ($("#txtPwd").prop("type") == "password") {
+          $(this).removeClass("fa-eye-slash").addClass("fa-eye");
+          $("#txtPwd").prop("type", "text")
+        }
+        else {
+          $(this).removeClass("fa-eye").addClass("fa-eye-slash");
+          $("#txtPwd").prop("type", "password")
+        }
+      })
+
+    })
+
+  </script>
+
+</head>
+
+<body>
+
+  <div class="row">
+
+    <nav class="navbar navbar-expand-lg" style="background-color:white#064e3b; padding: 5px 0;">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#" style="font-size: x-large; color:white">
+          <h4 class="fw-bold" style="padding-left: 50px;">
+            <i class="fa-solid fa-hand-holding-heart text-success me-2 fa-2x"></i>
+            <img src="pics/Blue-Forest-logo.jpg" height="60" alt=" ">
+            </h2>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto">
+
+            <li class="nav-item">
+              <button class="btn btn-success" type="submit" data-bs-toggle="modal"
+                data-bs-target="#signupModal">Signup</button>
+              <button class="btn btn-success" type="submit" data-bs-toggle="modal"
+                data-bs-target="#loginModal">Login</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+  </div>
+<div class="col-md-12" style="background-color: #064e3b;height: 20px;"></div>
+  <div class="row mt-3">
+    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="pics/new img2.png" class="d-block w-100" alt="..." style="height: 600px;">
+        </div>
+        <div class="carousel-item">
+          <img src="pics/new img.png" class="d-block w-100" alt="..." style="height: 600px;">
+        </div>
+        <div class="carousel-item">
+          <img src="pics/new img3.png" class="d-block w-100" alt="..." style="height: 600px;">
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+  <div class="row mt-3" style="line-height: 40px;background-color: #064e3b;font-size:xx-large">
+    <div class="col-md-12" style="color: white;">
+      <center>
+        <b>Our Services</b>
+      </center>
+    </div>
+  </div>
+  <div class="row" style="background-color: white;">
+   <div class="col-md-3 mt-3 d-flex">
+     <div class="card w-100">
+        <img src="pics/donate med.png" class="card-img-top" alt="..."
+          style="width: 250px; height: 250px; object-fit: cover; display: block; margin: 15px auto;">
+        <div class="card-body">
+          <h5 class="card-title"></h5>
+          <p class="card-text" style="font-size: large;color: black;">Donate your unused and unexpired medicines
+              to help people who are in need.
+              Your medicine can provide hope and support
+              to someone who cannot afford treatment.
+              Together, we can make a difference.</b>
+          </p>
+
+        </div>
+      </div>
+    </div>
+   <div class="col-md-3 mt-3 d-flex">
+     <div class="card w-100">
+        <img src="pics/find ngo.png" class="card-img-top" alt="..."  style="width: 250px; height: 250px; object-fit: cover; display: block; margin: 15px auto;">
+        <div class="card-body">
+        
+          <p class="card-text" style="font-size: large;color: black;">Find trusted NGOs working to support people in need.
+Connect with organizations involved in healthcare and medicine donation.
+Support their efforts by donating medicines and medical resources.
+Together, we can reach more people and build healthier communities.
+</p>
+          
+        </div>
+      </div>
+    </div>
+   <div class="col-md-3 mt-3 d-flex">
+     <div class="card w-100">
+        <img src="pics/eqp-donate.png" class="card-img-top" alt="..." style="width: 250px; height: 250px; object-fit: cover; display: block; margin: 15px auto;">
+        <div class="card-body">
+         
+          <p class="card-text" style="font-size: large;color: black;">Donate your unused medical equipment to help people in need.
+Support patients and healthcare organizations with essential equipment.
+Give wheelchairs, walkers, medical devices, and other useful items.
+Your contribution can make healthcare more accessible to everyone.
+</p>
+         
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mt-3 d-flex">
+     <div class="card w-100">
+        <img src="pics/donor prof.png" class="card-img-top" alt="..." style="width: 250px; height: 250px; object-fit: cover; display: block; margin: 15px auto;">
+        <div class="card-body">
+         
+          <p class="card-text" style="font-size: large;color: black;">Create your donor profile and manage your donations easily.
+Keep track of the medicines and equipment you have donated.
+Update your personal details and view your donation history.
+Be a part of our community and help make a difference.
+</p>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3" style="line-height: 40px;background-color: #064e3b;font-size:xx-large">
+    <div class="col-md-12" style="color: white;">
+      <center>
+        <b>Know Us</b>
+      </center>
+    </div>
+  </div>
+  <div class="row justify-content-center ">
+   <div class="col-md-4 mt-3 d-flex"> 
+    <div class="card w-100">
+
+        <div class="card-body">
+          <h3 class="card-title"><b>Under the Guidance of</b></h5>
+          <img src="pics/mentor.jpeg"card-img-top" alt="..." style="width: 250px; height: 250px; object-fit: cover; display: block; margin: 15px auto;">
+           <h4 class="fw-bold" >RAJESH K. BANSAL</h4>
+            <h6 class="text-muted">SCJP-Sun Certified Java Programmer</h6>
+          <p class="card-text"> 
+25 Years experience in Training & Development. Founder of realJavaOnline.com, loves coding in Java(J2SE, J2EE), C++,PHP, Python, AngularJS, Android,MERN Stack(MongoDB,Express,ReactJS,NodeJS). If you like tutorials and want to know more in depth about Java , buy his book "Real Java" available on amazon.in.
+<p>
+ <i class="fa-solid fa-envelope" style="color: rgb(39, 40, 41);"></i> bcebti@gmail.com &nbsp; &nbsp;&nbsp;&nbsp;
+<i class="fa-solid fa-phone"></i> 98722-46056</p>
+
+       
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mt-3 d-flex">
+     <div class="card w-100">
+         <div class="card-body">
+        <h3 class="card-title"><b>Meet the developer</b></h5>
+        <img src="pics/developer.jpeg" class="card-img-top" alt="..." style="border-radius: 50%;width: 250px; height: 250px; object-fit: cover; display: block; margin: 15px auto;" >
+         <h4 class="fw-bold" >LAKSHITA </h4>
+                    <h6 class="text-muted">Full Stack Developer</h6>
+                     <h6 class="text-muted">B.Tech CSE Student</h6>
+                    <p>
+                        Passionate about building meaningful web applications
+                        and using technology to solve real-world problems.
+                        Interested in developing innovative and user-friendly solutions that can make a positive impact on society. Enjoys learning new technologies, improving development skills, and turning ideas into practical applications.
+                    </p>
+                   <p>
+                    <i class="fa-solid fa-envelope" style="color: rgb(39, 40, 41);"></i> lakshitabansal.004@gmail.com &nbsp; &nbsp;&nbsp;&nbsp;
+                    <i class="fa-solid fa-phone"></i> 97809-21809</p>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+   <div class="row mt-3" style="line-height: 40px;background-color: #064e3b;font-size:xx-large">
+    <div class="col-md-12 " style="color: white;">
+      <center>
+        <b>Reach Us</b>
+      </center>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d27544.14099887718!2d76.3552494!3d30.350449!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391028ab86533db5%3A0x93cc1f72eae1c9a8!2sThapar%20Institute%20of%20Engineering%20%26%20Technology!5e0!3m2!1sen!2sin!4v1786224419896!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </div>
+  <div class="row  mt-3 " style="line-height: 40px;">
+    <div class="col-md-12">
+
+      <footer class="text-center text-white py-4" style="background-color: #064e3b;">
+    <h5 class="fw-bold">Donate Medicines. Save Lives.</h5>
+
+    <p class="mb-2">
+        Together, we can make healthcare more accessible and
+        help medicines reach those who need them.
+    </p>
+
+    <p class="mb-0">
+        © 2026 Medicine Donation Platform. All Rights Reserved.
+    </p>
+</footer>
+    </div>
+  </div>
+  </div>
+</body>
+</div>
+
+</div>
+
+<!--SIGNUP MODAL-->
+
+<div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Signup Here</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="text-center">
+            <img src="pics/admin.png" class="rounded" alt="..." width="100px">
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email Id</label>
+            <input type="email" class="form-control" id="txtEmail" name="txtEmail" aria-describedby="emailHelp">
+            <span id="msgSpan">****</span>
+            <span id="errEmail"></span>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <div class="position-relative">
+              <input type="password" class="form-control pe-5" id="txtPwd">
+
+              <i id="showhidepwd" class="fa-solid fa-eye-slash position-absolute"
+                style="top:50%; right:15px; transform:translateY(-50%); cursor:pointer;">
+              </i>
+            </div>
+            <span id="errPwd">**********</span>
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">User Type</label>
+            <select class="form-select" id="utype" name="utype">
+              <option value="">Select</option>
+              <option value="Donor">Donor</option>
+              <option value="Needy">Needy</option>
+              <option value="NGO">NGO</option>
+
+            </select>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" style="margin: auto;" id="dosignup">Signup
+          Now</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!--LOGIN MODAL-->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Login Modal</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="text-center">
+            <img src="pics/admin.png" class="rounded" alt="..." width="100px">
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email Id</label>
+            <input type="email" class="form-control" id="txtEmail2" name="txtEmail2" aria-describedby="emailHelp">
+
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Password</label>
+              <input type="password" class="form-control" id="txtPwd2" name="txtPwd2">
+
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" style="margin: auto;" id="dologin">Login</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+</body>
+
+</html>

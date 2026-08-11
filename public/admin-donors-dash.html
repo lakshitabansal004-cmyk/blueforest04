@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+
+          <script>
+        let myModule = angular.module("moduleKuch", []);
+        let myController = myModule.controller("controllerKuch", function ($scope, $http) {
+            $scope.doShowAll = function () {
+                let url = "/fetch-all-donors";
+                $http.get(url).then(function (resp) {
+                    //alert(JSON.stringify(resp.data));
+                    $scope.jsonAry = resp.data;
+                }, function (err) {
+                    alert(err);
+
+                })
+            }
+        })
+            </script>
+</head>
+
+<body  ng-app="moduleKuch" ng-controller="controllerKuch" >
+
+    <div class="container border">
+        <div class="row">
+            <div class="col-md-12 bg-warning text-white">
+                <center>
+                    <b>
+                        <p class="fs-2">DONOR CONTROL PANEL</p>
+                </center>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <center>
+              <input type="button" value="Fetch All Donors" class="btn btn-primary" ng-click="doShowAll()">
+            </center>
+        </div>
+        <div class="row mt-4">
+            <table border="2">
+                <tr>
+                    <th>Sr. no</th>
+                    <th>Emailid</th>
+                    <th>Name</th>
+                    <th>MObile</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>Aadhaar Pic</th>
+                    <th>Profile Pic</th>
+                </tr>
+                <tr ng-repeat="obj in jsonAry">
+                    <td>{{$index}}</td>
+                    <td>{{obj.emailid}}</td>
+                    <td>{{obj.name}}</td>
+                    <td>{{obj.mobile}}</td>
+                    <td>{{obj.address}}</td>
+                    <td>{{obj.city}}</td>
+                    <td>
+                        <center>
+                            <img src={{obj.acardpath}} width="50" height="50" alt="">
+                        </center>
+                    </td>
+                    <td>
+                        <center>
+                            <img src={{obj.picpath}} width="50" height="50" alt="">
+                        </center>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NGO FINDER</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+    <script>
+
+        let myModule = angular.module("moduleKuch", []);
+        let myController = myModule.controller("controllerKuch", function ($scope, $http) {
+            $scope.jsonArraycities = [];
+
+            $scope.loadCities = function () {
+                $http.get("/show-all-cities").then(function (response) {
+                   // alert(JSON.stringify(response.data))
+                    $scope.jsonArraycities = response.data;
+
+                }, function (error) {
+                    alert(error.data);
+                });
+
+            };
+
+            $scope.findngos = function () {
+                //  alert();
+                let city = $scope.ngocity;
+                let url = "/show_ngos_full?city=" + city;
+                $http.get(url).then(
+                    function (resp) {
+                        //  alert(JSON.stringify(resp.data));
+                        $scope.jsonArray = resp.data;
+                    },
+                    function (err) {
+                        alert(err);
+                    },
+                );
+
+            }
+            $scope.doShowngoDetails = function (obj) {
+                //  alert();
+                $scope.ObjOne = obj;
+
+            }
+        })
+    </script>
+</head>
+
+<body ng-app="moduleKuch" ng-controller="controllerKuch" ng-init="loadCities();findngos();">
+    <center>
+        <h2 style="margin-top: 10px;">FIND NGO'S</h2>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="City" class="form-label">Enter City Name</label>
+                    <input list="city-list" ng-model="ngocity" class="form-control" placeholder="Type city name"
+                        type="text" name="city" id="city" value="bathinda">
+                    <datalist id="city-list">
+                        <!--INPUT LIST NAME AND DATALIST NAME SHOULD BE SAME-->
+                        <option ng-repeat="obj in jsonArraycities" value="{{obj.city}}"></option>
+                    </datalist>
+                    <button type="button" class="btn btn-primary" ng-click="findngos()">Find & show NGOS</button>
+
+                </div>
+            </div>
+            <div class="row g-3 mt-5">
+                <div class="col-md-3 border border-danger" ng-repeat="obj in jsonArray">
+                    <div class="card g-5">
+                        <img src={{obj.picurl}} class="card-img-top" alt="..." width="100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{obj.emailid}}</h5>
+                            <p class="card-text">
+                                {{obj.ngo}}
+                            </p>
+                            <p class="card-text">
+                                {{obj.regoffice}}
+                            </p>
+                            <p class="card-text">
+                                {{obj.city}}
+                            </p>
+                            <p class="card-text">
+                                {{obj.contactno}}
+                            </p>
+                            <p class="card-text">
+                                {{obj.chairperson}}
+                            </p>
+                            <input type="button" class="btn btn-primary" ng-click="doShowngoDetails(obj)"
+                                data-bs-toggle="modal" data-bs-target="#ngoDetailsmodel" value="More Details">
+                        </div>
+                    </div>
+                </div>
+            </div>
+<div class="modal fade" id="ngoDetailsmodel" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header bg-warning">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Medicine Manager MODAL</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="mb-3">
+                                    <div class="row mt-4">
+                                       <table  border="1">
+
+                                    <tr>
+
+                                        <th>Sr. no</th>
+
+                                        <th>NGO Name</th>
+
+                                        <th>City</th>
+
+                                        <th>Website</th>
+
+                                        <th>Since</th>
+
+                                        <th>NGO Works</th>
+
+                                        <th>Registration number</th>
+
+                                        <th>Pic</th>
+
+                                    </tr>
+
+                                    <tr>
+
+                                        <td>{{$index}}</td>
+
+
+
+                                        <!--obj.column name in table-->
+
+                                        <td>{{ObjOne.ngo}}</td>
+
+                                        <td>{{ObjOne.city}}</td>
+
+                                        <td>{{ObjOne.website}}</td>
+
+                                        <td>{{ObjOne.since}}</td>
+
+                                        <td>{{ObjOne.ngoworks}}</td>
+
+                                        <td>{{ObjOne.regnumber}}</td>
+
+                                        <td>
+
+                                            <center>
+
+                                                <img src={{ObjOne.picurl}} width="50" height="50" alt="">
+                                                </center>
+                                        </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </body>
+</html>

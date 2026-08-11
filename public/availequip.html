@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Avail Equipment</title>
+    <script>
+        function doShowPrev(fileCtrl, prev) {
+            if (fileCtrl.files && fileCtrl.files[0]) {
+                prev.src = URL.createObjectURL(fileCtrl.files[0]);
+
+            }
+        }
+        function doShowPrev2(fileCtrl, prev2) {
+            if (fileCtrl.files && fileCtrl.files[0]) {
+                prev2.src = URL.createObjectURL(fileCtrl.files[0]);
+
+            }
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $("#radsale").click(function () {
+                $("#amount").prop("disabled", false);
+                //alert();
+            })
+            $("#raddon").click(function () {
+                $("#amount").prop("disabled", true);
+                //alert();
+            })
+
+           
+        })
+    </script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <div class="container border">
+        <div class="row" style="background-color: rgb(0, 184, 80);">
+            <div class="col-md-12  text-white">
+                <center>
+                    <b>
+                        <p class="fs-2">AVAIL EQUIPMENT</p>
+                </center>
+            </div>
+        </div>
+        <form action="/availeqp" class="" enctype="multipart/form-data" method="post">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-6 mt-5">
+                    <label for="inputEmail4" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="txtEmail" name="txtEmail">
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-5">
+                    <label for="inputAddress" class="form-label">Medical Equipment Type</label>
+                    <input type="text" class="form-control" id="medeqp" name="medeqp">
+                </div>
+                <div class="col-md-5">
+                    <label for="inputCity" class="form-label">Condition</label>
+                    <select class="form-select" id="condition" name="condition">
+                        <option value="">Select </option>
+                        <option value="Sealed Pack">Sealed Pack</option>
+                        <option value="Unopened">Unopened</option>
+                        <option value="Partially Used">Partially Used</option>
+                        <option value="Opened">Opened</option>
+                        <option value="Damaged Pack">Damaged Pack</option>
+                        <option value="Near Expiry">Near Expiry</option>
+                        <option value="Expired">Expired</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-5">
+                    <input type="radio" name="type" value="Donation" id="raddon">
+                    <label for="donation" class="me-4">Donation</label>
+                    <input type="radio" name="type" id="radsale">
+                    <label for="sale" >Sale</label>
+                </div>
+                <div class="col-md-5">
+                    Amount
+                    <input type="number" name="amount" value="0" id="amount" disabled>
+                </div>
+            </div>
+
+            <div class="row mt-4 justify-content-center">
+                <div class="col-md-5 ">
+                    <img id="prev" src="" width="300" height="400">
+                    <br><br>
+                    Upload Pic: &nbsp;&nbsp;<input type="file" name="pic1url" id="pic1url"
+                        onchange="doShowPrev(this,prev)">
+
+                </div>
+                <div class="col-md-5">
+                    <img id="prev2" src="" width="300" height="400">
+                    <br><br>
+                    Upload Pic: &nbsp;&nbsp;<input type="file" name="pic2url" id="pic2url"
+                        onchange="doShowPrev2(this,prev2)">
+
+                </div>
+            </div>
+            <div class="row g-3 mt-3">
+                <div class="col-md-6">
+                    <label for="inputEmail4" class="form-label" id="info">Other Info</label>
+                    <textarea cols="100" rows="4" name="info"></textarea>
+                </div>
+            </div>
+            <div class="row mt-1 g-5">
+                <div class="col-md-12">
+                    <center> <button type="submit" class="btn btn-primary">Avail for the Needys</button>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

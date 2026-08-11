@@ -1,0 +1,24 @@
+{
+  "name": "my-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "indexserver.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@google/genai": "^2.13.0",
+    "@google/generative-ai": "^0.24.1",
+    "cloudinary": "^2.10.0",
+    "dotenv": "^17.4.2",
+    "explorer": "^0.0.5",
+    "express": "^5.2.1",
+    "file": "^0.2.2",
+    "mysql2": "^3.22.6",
+    "nodemailer": "^9.0.3"
+  }
+}
